@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Table from "react-bootstrap/Table";
 import Pagination from "react-bootstrap/Pagination";
+import 
 
 const ParentTable = () => {
   const [parentData, setParentData] = useState([]);
@@ -9,8 +10,8 @@ const ParentTable = () => {
   const [currentPage, setCurrentPage] = useState(0);
 
   //serve up parentData
-  const getParentData = () => {
-    axios
+  const getParentData = async () => {
+    await axios
       .get("./Parent.json")
       .then(({ data }) => {
         console.log(data.data);
@@ -24,23 +25,14 @@ const ParentTable = () => {
 
   const ParentRow = (props) => {
     const dataInput = props.dataInput;
-    //data.data is array containing 7 objects
-    // const renderRows = dataInput.map((parent) => (
-    //   <tr key={uuidv4()}>
-    //     <td key={uuidv4()}>{parent.id}</td>
-    //     <td key={uuidv4()}>{parent.sender}</td>
-    //     <td key={uuidv4()}>{parent.receiver}</td>
-    //     <td key={uuidv4()}> {parent.totalAmount}</td>
-    //   </tr>
-    // ));
     const rowRendered = dataInput[currentPage];
-    console.log(rowRendered);
+    const {id, sender, receiver, totalAmount} = rowRendered
     return (
       <tr>
-        <td>{rowRendered.id}</td>
-        <td>{rowRendered.sender}</td>
-        <td>{rowRendered.receiver}</td>
-        <td>{rowRendered.totalAmount}</td>
+        <td>{id}</td>
+        <td>{sender}</td>
+        <td>{receiver}</td>
+        <td>{totalAmount}</td>
       </tr>
     );
   };

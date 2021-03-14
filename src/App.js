@@ -1,11 +1,11 @@
 import {React} from 'react';
 import './App.css';
-import ParentTable from './components/parentTable';
+import NewTable from './components/newTable';
 
 const App = () => {
   return (
     <div>
-      <ParentTable />
+      <NewTable />
     </div>
   );
 }
