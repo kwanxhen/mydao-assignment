@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
-import Table from "react-bootstrap/Table";
 import axios from "axios";
+import Table from "react-bootstrap/Table";
+import Pagination from "react-bootstrap/Pagination";
 
 const ParentTable = () => {
   const [parentData, setParentData] = useState([]);
 
+  const [currentPage, setCurrentPage] = useState(0);
+
+  //serve up parentData
   const getParentData = () => {
     axios
       .get("./Parent.json")
@@ -14,29 +18,46 @@ const ParentTable = () => {
       })
       .catch((err) => {});
   };
-
   useEffect(() => {
     getParentData();
   }, []);
 
-  //data arrray looks like {} {} {} {} {} {} {}
-
-  
-
-  const ParentRows = (props) => {
+  const ParentRow = (props) => {
     const dataInput = props.dataInput;
-    console.log(dataInput);
-
-    const renderRows = dataInput.map((parent) => (
+    //data.data is array containing 7 objects
+    // const renderRows = dataInput.map((parent) => (
+    //   <tr key={uuidv4()}>
+    //     <td key={uuidv4()}>{parent.id}</td>
+    //     <td key={uuidv4()}>{parent.sender}</td>
+    //     <td key={uuidv4()}>{parent.receiver}</td>
+    //     <td key={uuidv4()}> {parent.totalAmount}</td>
+    //   </tr>
+    // ));
+    const rowRendered = dataInput[currentPage];
+    console.log(rowRendered);
+    return (
       <tr>
-        <td>{parent.id}</td>
-        <td>{parent.sender}</td>
-        <td>{parent.receiver}</td>
-        <td>{parent.totalAmount}</td>
+        <td>{rowRendered.id}</td>
+        <td>{rowRendered.sender}</td>
+        <td>{rowRendered.receiver}</td>
+        <td>{rowRendered.totalAmount}</td>
       </tr>
-    ));
+    );
+  };
 
-    return renderRows
+  //Handles pagination click event
+  const paginationClick = (event) => {
+    setCurrentPage(event.target.id - 1);
+  };
+
+  //Logic for displaying page numbers
+  const pageNumbers = [];
+  for (let i = 1; i < parentData.length; i++) {
+    pageNumbers.push(
+      <Pagination.Item key={i} id={i} onClick={paginationClick}>
+        {i}
+      </Pagination.Item>
+    );
   }
 
   return (
@@ -51,9 +72,11 @@ const ParentTable = () => {
           </tr>
         </thead>
         <tbody>
-          <ParentRows dataInput={parentData} />
+          <ParentRow dataInput={parentData} />
         </tbody>
       </Table>
+
+      <Pagination>{pageNumbers}</Pagination>
     </React.Fragment>
   );
 };
